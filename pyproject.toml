@@ -1,0 +1,17 @@
+[project]
+name = "agent-session-logger"
+version = "0.1.0"
+description = "Record, index, and search AI agent sessions"
+requires-python = ">=3.10"
+dependencies = [
+    "click>=8.0",
+    "rich>=13.0",
+    "sqlite-vec>=0.1.0",
+]
+
+[project.scripts]
+asl = "asl.cli:cli"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
