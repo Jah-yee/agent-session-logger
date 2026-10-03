@@ -12,6 +12,12 @@ dependencies = [
 [project.scripts]
 asl = "asl.cli:cli"
 
+[project.optional-dependencies]
+dev = ["pytest>=8.0"]
+
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["asl"]
