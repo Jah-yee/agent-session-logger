@@ -13,7 +13,7 @@ ASL is a CLI tool that records your agent sessions and makes them searchable.
 ## Install
 
 ```bash
-pip install agent-session-logger
+pip install git+https://github.com/yunaremaia/agent-session-logger.git
 ```
 
 ## Quick Start
