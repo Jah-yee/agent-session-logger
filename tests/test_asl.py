@@ -1,10 +1,13 @@
 """Tests for ASL."""
 
 import os
+import subprocess
+import sys
 import tempfile
 import pytest
 from pathlib import Path
 
+import asl
 from asl.store import Store
 from asl.recorder import Recorder
 from asl.searcher import Searcher
@@ -109,3 +112,36 @@ class TestExporter:
     def test_export_nonexistent(self, store):
         md = export_session("nonexistent", str(store.project_path))
         assert "Error" in md
+
+
+class TestModuleEntryPoint:
+    """`python -m asl.cli` must reach the CLI. Regression test for #16.
+
+    Without the ``__main__`` guard, runpy executes the module body for its
+    side effects and falls off the end: exit status 0 and no output at all,
+    for every subcommand and for ``--help``. The exit status alone cannot tell
+    that apart from success, so assert on stdout and on click's usage error.
+    """
+
+    def _run(self, *args):
+        return subprocess.run(
+            [sys.executable, "-m", "asl.cli", *args],
+            capture_output=True, text=True, timeout=30,
+        )
+
+    def test_help_prints_usage(self):
+        result = self._run("--help")
+        assert result.returncode == 0
+        assert "Usage:" in result.stdout
+        for command in ("record", "search", "export", "list", "init"):
+            assert command in result.stdout
+
+    def test_version_prints_version(self):
+        result = self._run("--version")
+        assert result.returncode == 0
+        assert asl.__version__ in result.stdout
+
+    def test_unknown_command_is_a_usage_error(self):
+        result = self._run("no-such-command")
+        assert result.returncode == 2
+        assert "Usage:" in result.stderr
