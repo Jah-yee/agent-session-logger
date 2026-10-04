@@ -2,6 +2,7 @@
 
 import click
 from rich.console import Console
+from rich.markup import escape
 
 from .recorder import Recorder
 from .searcher import Searcher
@@ -46,8 +47,8 @@ def search(query: str, limit: int, project: str):
         console.print("[yellow]No results found[/yellow]")
         return
     for r in results:
-        console.print(f"[bold cyan]{r['session_id']}[/bold cyan]  [dim]{r['timestamp']}[/dim]")
-        console.print(f"  {r['snippet']}")
+        console.print(f"[bold cyan]{escape(r['session_id'])}[/bold cyan]  [dim]{r['timestamp']}[/dim]")
+        console.print(f"  {escape(r['snippet'])}", highlight=False, soft_wrap=True)
         console.print()
 
 
@@ -72,7 +73,7 @@ def list(project: str):
         console.print("[yellow]No sessions recorded yet[/yellow]")
         return
     for s in sessions:
-        console.print(f"[cyan]{s['id']}[/cyan]  [dim]{s['agent']}  {s['started_at']}[/dim]")
+        console.print(f"[cyan]{escape(s['id'])}[/cyan]  [dim]{s['agent']}  {s['started_at']}[/dim]")
 
 
 @cli.command()
