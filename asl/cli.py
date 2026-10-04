@@ -84,3 +84,6 @@ def init(project: str):
     store.init_db()
     console.print(f"[green]Initialized ASL in {project}[/green]")
     console.print(f"Database: {store.db_path}")
+
+if __name__ == '__main__':
+    cli()
